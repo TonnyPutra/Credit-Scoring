@@ -9,9 +9,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-from nbdev.export import nb_export
 from tensorflow.keras.models import load_model
-from streamlit_jupyter import StreamlitPatcher, tqdm
 
 # %% Credit Scoring Dashboard.ipynb 5
 st.set_page_config(layout="wide")
