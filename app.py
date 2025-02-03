@@ -24,11 +24,25 @@ st.markdown("""
         
         /* Button styling */
         .stButton>button {
-            background-color: #E8B86D;
-            color: #185519;
+            background-color: #123524;
+            color: white;
             border-radius: 5px;
             padding: 10px 20px;
             font-size: 16px;
+        }
+
+        /* Add background color to the container holding the columns */
+        .st-emotion-cache-1wmy9hl > div {
+            background-color: #185519 !important;  /* Set the column background color */
+            margin: 7px 7px 7px 7px;
+        }
+
+        .st-emotion-cache-434r0z > div:first-child {
+            margin-right: 10px;
+        }
+        
+        .st-emotion-cache-434r0z > div:last-child {
+            margin-right: 17px;
         }
     </style>
 """, unsafe_allow_html=True)
