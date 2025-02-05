@@ -13,6 +13,9 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from tensorflow.keras.models import load_model
 
+API_KEY = "cur_live_lN0DkPaOPRfRetRKByzfT38fG0vuQa5CIJjBuORv"
+BASE_URL = "https://api.currencyapi.com/v3/latest"
+
 @st.cache_data(ttl=86400)  # Cache data for 24 hours (86400 seconds)
 def get_exchange_rate():
     """Fetches and caches the IDR to USD exchange rate for 24 hours."""
