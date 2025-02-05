@@ -5,11 +5,32 @@ __all__ = []
 
 # %% Credit Scoring Dashboard.ipynb 2
 import joblib
+import requests
 import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
+from datetime import datetime
 from tensorflow.keras.models import load_model
+
+@st.cache_data(ttl=86400)  # Cache data for 24 hours (86400 seconds)
+def get_exchange_rate():
+    """Fetches and caches the IDR to USD exchange rate for 24 hours."""
+    params = {
+        "apikey": API_KEY,
+        "base_currency": "IDR",
+        "currencies": "USD"
+    }
+    response = requests.get(BASE_URL, params=params)
+    data = response.json()
+
+    if "data" in data and "USD" in data["data"]:
+        exchange_rate = data["data"]["USD"]["value"]
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return exchange_rate, timestamp  # Return rate + timestamp
+    else:
+        st.error("Failed to fetch exchange rate. Please try again later.")
+        return None, None
 
 # %% Credit Scoring Dashboard.ipynb 5
 st.set_page_config(layout="wide")
@@ -98,15 +119,16 @@ with col1:
 with col2:
     st.markdown("**Masukkan Informasi Pemohon**")
     i1, i2, i3 = st.columns(3)
+    rate, last_updated = get_exchange_rate()
     with i1: 
         person_age = st.number_input("Usia Pemohon", min_value=18, max_value=100, value=31)
-        person_income = st.number_input("Pendapatan Pemohon (USD)", min_value=1000, max_value=500000, value=50000)
+        person_income = st.number_input("Pendapatan Pemohon Pertahun (IDR)", min_value=1000, max_value=500000, value=50000)
         person_emp_length = st.number_input("Lama Bekerja (tahun)", min_value=0, max_value=120, value=20)
         person_home_ownership_id = st.selectbox(
             "Status Kepemilikan Rumah", list(home_ownership_map.keys()), index=2
         )    
     with i2:
-        loan_amnt = st.number_input("Jumlah Pinjaman (USD)", min_value=500, max_value=100000, value=55000)
+        loan_amnt = st.number_input("Jumlah Pinjaman (IDR)", min_value=500, max_value=100000, value=55000)
         loan_intent_id = st.selectbox(
             "Tujuan Pinjaman", list(loan_intent_map.keys()), index=1
         )
@@ -124,9 +146,9 @@ with col2:
     
     input_data = pd.DataFrame({
         'person_age': [person_age],
-        'person_income': [person_income],
+        'person_income': [person_income*rate],
         'person_emp_length': [person_emp_length],
-        'loan_amnt': [loan_amnt],
+        'loan_amnt': [loan_amnt*rate],
         'loan_int_rate': [loan_int_rate],
         'loan_percent_income': [loan_percent_income],
         'cb_person_cred_hist_length': [cb_person_cred_hist_length],
