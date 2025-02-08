@@ -89,8 +89,13 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
             display: none;
         }
 
-        .st-emotion-cache-zbi9p7 {
-            height: 5.75rem !important;
+        .st-emotion-cache-5drf04 {
+            max-width: 15rem; /* Set custom width */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .st-emotion-cache-1hvtlnw {
+            height: 5.75rem;
         }
       </style>
 
