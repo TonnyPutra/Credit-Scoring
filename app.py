@@ -5,185 +5,167 @@ __all__ = []
 
 # %% Credit Scoring Dashboard.ipynb 2
 import joblib
-import requests
-import numpy as np
-import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
-from datetime import datetime
-from tensorflow.keras.models import load_model
-
-API_KEY = "cur_live_lN0DkPaOPRfRetRKByzfT38fG0vuQa5CIJjBuORv"
-BASE_URL = "https://api.currencyapi.com/v3/latest"
-
-@st.cache_data(ttl=86400)  # Cache data for 24 hours (86400 seconds)
-def get_exchange_rate():
-    """Fetches and caches the IDR to USD exchange rate for 24 hours."""
-    params = {
-        "apikey": API_KEY,
-        "base_currency": "IDR",
-        "currencies": "USD"
-    }
-    response = requests.get(BASE_URL, params=params)
-    data = response.json()
-
-    if "data" in data and "USD" in data["data"]:
-        exchange_rate = data["data"]["USD"]["value"]
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        return exchange_rate, timestamp  # Return rate + timestamp
-    else:
-        st.error("Failed to fetch exchange rate. Please try again later.")
-        return None, None
+import streamlit_authenticator as stauth 
+import model1
 
 # %% Credit Scoring Dashboard.ipynb 5
 st.set_page_config(layout="wide")
-# Apply custom CSS
-st.markdown("""
-    <style>
-        /* Move content higher */
-        .block-container {
-            padding-top: 10px !important;  /* Reduce top padding */
-            margin-top: -10px !important;  /* Move content up */
-        }
-        
-        /* Button styling */
-        .stButton>button {
-            background-color: #123524;
-            color: white;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
 
-        /* Add background color to the container holding the columns */
-        .st-emotion-cache-1wmy9hl > div {
-            background-color: #185519 !important;  /* Set the column background color */
-            margin: 7px 7px 7px 7px;
+hashed_passwords = joblib.load('hashed_pw.pkl')
+
+credentials = {
+    "usernames": {
+        "Tstark": {  # Username as key
+            "email": "mr.stark@example.com",
+            "name": "Mr. Stark",
+            "password": hashed_passwords[0]
         }
-
-        .st-emotion-cache-434r0z > div:first-child {
-            margin-right: 10px;
-        }
-        
-        .st-emotion-cache-434r0z > div:last-child {
-            margin-right: 17px;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# %% Credit Scoring Dashboard.ipynb 6
-st.title("Credit Scoring Dashboard")
-
-# %% Credit Scoring Dashboard.ipynb 7
-scaler = joblib.load('train_scaler.pkl')
-label_encoders = joblib.load('label_encoders.pkl')
-model = load_model('model.h5')
-
-# Mapping untuk Categorical Features
-home_ownership_map = {
-    "SEWA": "RENT",
-    "KPR": "MORTGAGE",
-    "MILIK SENDIRI": "OWN",
-    "LAINNYA": "OTHER"
+    }
 }
 
-loan_intent_map = {
-    "PENDIDIKAN": "EDUCATION",
-    "MEDIS": "MEDICAL",
-    "USAHA": "VENTURE",
-    "PRIBADI": "PERSONAL",
-    "KONSOLIDASI HUTANG": "DEBTCONSOLIDATION",
-    "PERBAIKAN RUMAH": "HOMEIMPROVEMENT"
-}
+# Initialize authenticator
+authenticator = stauth.Authenticate(
+    credentials,  
+    "credit_scoring_dashboard",  
+    "yke",  
+    cookie_expiry_days=7  
+)
 
-default_history_map = {"Y": "Y", "N": "N"}  # Tetap sama
-loan_grade_map = {"A": "A", "B": "B", "C": "C", "D": "D", "E": "E", "F": "F", "G": "G"}  # Tetap sama
+login_result = authenticator.login(location="main")
 
-# %% Credit Scoring Dashboard.ipynb 8
-col1, col2 = st.columns([2, 4], gap="medium")
+# Check session state directly
+if 'authentication_status' in st.session_state and st.session_state['authentication_status']:
+  # Apply custom CSS
+  st.markdown("""
+      <style>
+          /* Move content higher */
+          .block-container {
+              padding-top: center !important;  /* Reduce top padding */
+          }
 
-with col1:
-    st.subheader("Apa itu skor kredit?")
-    st.image("credit factor.jpg")
-    st.markdown("""
-        <style>
-            .justified-text {
-                text-align: justify;
-            }
-        </style>
-        <div class="justified-text">
-            Dalam suatu proses pengajuan pinjaman, kreditur akan menentukan keputusan
-            dari pengajuan pinjaman berdasarkan data diri dan riwayat catatan biro kredit. 
-            Oleh karena itu, mengetahui kemungkinan keputusan tersebut dapat membantu dalam
-            merencanakan peminjaman.
-        </div>
-    """, unsafe_allow_html=True)
-    
-with col2:
-    st.markdown("**Masukkan Informasi Pemohon**")
-    i1, i2, i3 = st.columns(3)
-    rate, last_updated = get_exchange_rate()
-    with i1: 
-        person_age = st.number_input("Usia Pemohon", min_value=18, max_value=100, value=31)
-        person_income = st.number_input("Pendapatan Pemohon Pertahun (IDR)", min_value=0, value=100000000)
-        person_emp_length = st.number_input("Lama Bekerja (tahun)", min_value=0, max_value=120, value=20)
-        person_home_ownership_id = st.selectbox(
-            "Status Kepemilikan Rumah", list(home_ownership_map.keys()), index=2
-        )    
-    with i2:
-        loan_amnt = st.number_input("Jumlah Pinjaman (IDR)", min_value=0, value=150000000)
-        loan_intent_id = st.selectbox(
-            "Tujuan Pinjaman", list(loan_intent_map.keys()), index=1
-        )
-        loan_int_rate = st.number_input("Suku Bunga Pinjaman (%)", min_value=0.0, max_value=50.0, value=13.31)
-        loan_percent_income = st.number_input("Persentase Pendapatan untuk Pinjaman", min_value=0.0, max_value=1.0, value=0.67)
-    with i3: 
-        cb_person_cred_hist_length = st.number_input("Lama Riwayat Kredit (tahun)", min_value=0, max_value=30, value=1)
-        loan_grade_id = st.selectbox("Grade Pinjaman", list(loan_grade_map.keys()), index=2)
-        cb_person_default_on_file_id = st.selectbox("Riwayat Kredit Buruk (Y/N)", list(default_history_map.keys()), index=1)
+          /* Button styling */
+          .stButton>button {
+              background-color: #123524;
+              color: white;
+              border-radius: 5px;
+              padding: 10px 20px;
+              font-size: 16px;
+          }
 
-    person_home_ownership = home_ownership_map[person_home_ownership_id]
-    loan_intent = loan_intent_map[loan_intent_id]
-    loan_grade = loan_grade_map[loan_grade_id]
-    cb_person_default_on_file = default_history_map[cb_person_default_on_file_id]
-    
-    input_data = pd.DataFrame({
-        'person_age': [person_age],
-        'person_income': [person_income*rate],
-        'person_emp_length': [person_emp_length],
-        'loan_amnt': [loan_amnt*rate],
-        'loan_int_rate': [loan_int_rate],
-        'loan_percent_income': [loan_percent_income],
-        'cb_person_cred_hist_length': [cb_person_cred_hist_length],
-        'person_home_ownership': [person_home_ownership],
-        'loan_intent': [loan_intent],
-        'loan_grade': [loan_grade],
-        'cb_person_default_on_file': [cb_person_default_on_file]
-    })
-    
-    
-    numerical_features = ['person_age', 'person_income', 'person_emp_length',
-                          'loan_amnt', 'loan_int_rate', 'loan_percent_income',
-                          'cb_person_cred_hist_length']
-    categorical_features = ['person_home_ownership', 'loan_intent', 'loan_grade',
-                            'cb_person_default_on_file']
-    
-    
-    input_data[numerical_features] = scaler.transform(input_data[numerical_features])
-    
-    
-    for col in categorical_features:
-        input_data[col] = label_encoders[col].transform(input_data[col])
-    
-    
-    input_dict = {f"{feature}_input": input_data[feature].values.reshape(-1, 1) for feature in categorical_features}
-    input_dict["numerical_input"] = input_data[numerical_features].values
-    
-    c1, c2 = st.columns([1, 2])  # Adjust width as needed
-    
-    with c1:
-        if st.button("Prediksi Status Pinjaman"):
-            prediction = model.predict(input_dict)
-            predicted_class = "DITOLAK" if prediction[0][0] >= 0.5 else "DITERIMA"
-            with c2:  # Place result in second column
-                st.subheader(f"Hasil Prediksi Pinjaman: **{predicted_class}**")
+          /* Add background color to the container holding the columns */
+          .st-emotion-cache-1wmy9hl > div {
+              background-color: #185519 !important;  /* Set the column background color */
+              margin: 7px 7px 7px 7px;
+          }
+
+          .st-emotion-cache-434r0z > div:first-child {
+              margin-right: 10px;
+          }
+          
+          .st-emotion-cache-434r0z > div:last-child {
+              margin-right: 17px;
+          }
+
+          # header {visibility: hidden;}
+          footer {visibility: hidden;}
+
+          .st-emotion-cache-o4xmfe {
+              width: 250px; /* Set custom width */
+              height: auto; /* Maintain aspect ratio */
+          }
+
+        .st-emotion-cache-1q8sxg4 {
+            position: absolute;
+            bottom: -280px; /* Default value */
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            transition: bottom 0.3s ease-in-out; /* Smooth transition */
+        }
+
+        /* Hide all header icons except the logo */
+        [data-testid="stHeader"] div:nth-child(2) {
+            display: none;
+        }
+
+        .st-emotion-cache-zbi9p7 {
+            height: 5.75rem !important;
+        }
+      </style>
+
+      <script>
+          function adjustLogoutPosition() {
+              let sidebar = document.querySelector('[data-testid="stSidebar"]');
+              let logoutButton = document.querySelector('.st-emotion-cache-1q8sxg4');
+
+              if (sidebar && logoutButton) {
+                  let sidebarHeight = sidebar.clientHeight; // Get sidebar height
+                  let offset = 280;  // Adjust this value as needed
+                  logoutButton.style.bottom = -(sidebarHeight * 0.15 + offset) + 'px';
+              }
+          }
+      </script>
+  """, unsafe_allow_html=True)
+
+  with st.sidebar:
+      st.sidebar.write("Halo", st.session_state['name'])
+      if st.button("🏠 Home", use_container_width=True):
+          st.session_state["page"] = "Home"
+
+      if st.button("📊 Model 1", use_container_width=True):
+          st.session_state["page"] = "Model 1"
+      authenticator.logout(location="sidebar")
+
+  if "page" not in st.session_state:
+      st.session_state["page"] = "Home"
+
+  # 🚀 Load the selected page WITHOUT reloading the whole app
+  if st.session_state["page"] == "Model 1":
+      model1.run()
+      st.stop()
+  
+  # %% Credit Scoring Dashboard.ipynb 6
+  st.title("Credit Scoring Dashboard")
+  st.logo("logo.png", link="https://ptatkb.idjams.com/", size="large")
+  
+  # %% Credit Scoring Dashboard.ipynb 8
+  col1, col2 = st.columns(2, gap="medium")
+
+  with col1:
+      st.subheader("Apa itu skor kredit?")
+      # st.image("credit factor.jpg")
+      st.markdown("""
+          <style>
+              .justified-text {
+                  text-align: justify;
+              }
+          </style>
+          <div class="justified-text">
+              Dalam suatu proses pengajuan pinjaman, kreditur akan menentukan keputusan
+              dari pengajuan pinjaman berdasarkan data diri dan riwayat catatan biro kredit. 
+              Oleh karena itu, mengetahui kemungkinan keputusan tersebut dapat membantu dalam
+              merencanakan peminjaman.
+          </div>
+      """, unsafe_allow_html=True)
+      
+  with col2:
+      st.subheader("Apa Yang Kami Bawakan?")
+      st.markdown("""
+          <style>
+              .justified-text {
+                  text-align: justify;
+              }
+          </style>
+          <div class="justified-text">
+              Dengan menggunakan Deep Learning, kami membuat sebuah AI yang dapat memprediksi terkait 
+              kredit skor. Model yang saat ini sudah berhasil dibangun menggunakan Neural Network
+              bertipe Multi-Layer Perceptron dapat memprediksi keputusan peminjaman yang diajukan
+              seseorang berdasarkan beberapa input terkait. Model ini mencapai akurasi hingga 88% 
+              pada data latih.
+          </div>
+      """, unsafe_allow_html=True)
+
+else:
+    # If not authenticated, show login form or error
+    st.error("You are not logged in.")
