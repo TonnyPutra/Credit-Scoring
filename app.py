@@ -12,6 +12,24 @@ import model1
 # %% Credit Scoring Dashboard.ipynb 5
 st.set_page_config(layout="wide")
 
+st.markdown("""
+    <style>
+        .st-emotion-cache-16h9saz {
+            background: #185519 !important;
+        }
+        
+        .st-emotion-cache-1pst7dz {
+            background-color: #123524 !important;
+        }
+
+        .st-au {
+            background-color: #123524 !important;
+        }
+    </style>
+
+""", unsafe_allow_html=True)
+
+
 hashed_passwords = joblib.load('hashed_pw.pkl')
 
 credentials = {
@@ -41,7 +59,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
       <style>
           /* Move content higher */
           .block-container {
-              padding-top: center !important;  /* Reduce top padding */
+              position: center !important;  /* Reduce top padding */
           }
 
           /* Button styling */
@@ -56,16 +74,9 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
           /* Add background color to the container holding the columns */
           .st-emotion-cache-1wmy9hl > div {
               background-color: #185519 !important;  /* Set the column background color */
-              margin: 7px 7px 7px 7px;
+              padding: 15px;
           }
 
-          .st-emotion-cache-434r0z > div:first-child {
-              margin-right: 10px;
-          }
-          
-          .st-emotion-cache-434r0z > div:last-child {
-              margin-right: 17px;
-          }
 
           # header {visibility: hidden;}
           footer {visibility: hidden;}
