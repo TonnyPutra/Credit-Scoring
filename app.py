@@ -86,7 +86,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
               height: auto; /* Maintain aspect ratio */
           }
 
-        .st-emotion-cache-1q8sxg4 {
+        .st-emotion-cache-cit1en {
             position: absolute;
             bottom: -280px; /* Default value */
             left: 50%;
