@@ -68,13 +68,13 @@ def run():
           footer {visibility: hidden;}
 
           .st-emotion-cache-o4xmfe {
-              width: 250px; /* Set custom width */
+              width: 500px; /* Set custom width */
               height: auto; /* Maintain aspect ratio */
           }
       </style>
     """, unsafe_allow_html=True)
 
-    st.logo("logo.png",size="large", link="https://ptatkb.idjams.com/")
+    st.logo("logo.png", link="https://ptatkb.idjams.com/")
     # %% Credit Scoring Dashboard.ipynb 7
     scaler = joblib.load('train_scaler.pkl')
     label_encoders = joblib.load('label_encoders.pkl')
