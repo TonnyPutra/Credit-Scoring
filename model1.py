@@ -67,9 +67,13 @@ def run():
 
           footer {visibility: hidden;}
 
-          .st-emotion-cache-19u4bdk {
-              width: 250px; /* Set custom width */
+          .st-emotion-cache-5drf04 {
+              max-width: 15rem; /* Set custom width */
               height: auto; /* Maintain aspect ratio */
+          }
+
+          .st-emotion-cache-1hvtlnw {
+              height: 5.75rem;
           }
       </style>
     """, unsafe_allow_html=True)
