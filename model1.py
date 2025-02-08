@@ -74,7 +74,7 @@ def run():
       </style>
     """, unsafe_allow_html=True)
 
-    st.logo("logo.png", link="https://ptatkb.idjams.com/")
+    st.logo("logo.png",size="large", link="https://ptatkb.idjams.com/")
     # %% Credit Scoring Dashboard.ipynb 7
     scaler = joblib.load('train_scaler.pkl')
     label_encoders = joblib.load('label_encoders.pkl')
