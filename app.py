@@ -127,14 +127,13 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
   
   # %% Credit Scoring Dashboard.ipynb 6
   st.title("Credit Scoring Dashboard")
-  st.logo("logo.png", link="https://ptatkb.idjams.com/", size="large")
+  st.logo("logo.png", link="https://ptatkb.idjams.com/")
   
   # %% Credit Scoring Dashboard.ipynb 8
   col1, col2 = st.columns(2, gap="medium")
 
   with col1:
       st.subheader("Apa itu skor kredit?")
-      # st.image("credit factor.jpg")
       st.markdown("""
           <style>
               .justified-text {
