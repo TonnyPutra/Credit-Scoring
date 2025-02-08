@@ -52,22 +52,11 @@ def run():
           }
 
           /* Add background color to the container holding the columns */
-          # .st-emotion-cache-1wmy9hl > div {
-          #     background-color: #185519 !important;  /* Set the column background color */
-          #     margin: 7px 7px 7px 7px;
-          # }
-
-          .st-emotion-cache-ocqkz7 {
+          .st-emotion-cache-1wmy9hl > div {
               background-color: #185519 !important;
+              margin: 0px 0px 0px -15px;
+              padding: 15px;
           }
-
-          # .st-emotion-cache-434r0z > div:first-child {
-          #     margin-right: 10px;
-          # }
-          
-          # .st-emotion-cache-434r0z > div:last-child {
-          #     margin-right: 17px;
-          # }
 
           footer {visibility: hidden;}
 
