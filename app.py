@@ -119,6 +119,11 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
         .st-emotion-cache-6qob1r {
             background-color: #185519 !important; 
         }
+
+        .st-emotion-cache-1f3w014 {
+            fill: #000;
+            height: 4.5rem;
+        }
       </style>
 
       <script>
