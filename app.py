@@ -154,7 +154,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
   st.title("Credit Scoring Dashboard")
   st.logo("logo.png", link="https://ptatkb.idjams.com/")
 
-  st.image("credit factor.jpg", caption="Sumber: www.nected.ai", width=500, use_container_width=True)
+  st.image("credit factor.jpg", caption="Sumber: www.nected.ai", width=500)
   # %% Credit Scoring Dashboard.ipynb 8
   col1, col2 = st.columns(2, gap="medium")
 
