@@ -25,6 +25,10 @@ st.markdown("""
         .st-au {
             background-color: #123524 !important;
         }
+
+        [data-testid="stHeader"] div:nth-child(2) {
+            display: none;
+        }
     </style>
 
 """, unsafe_allow_html=True)
@@ -59,7 +63,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
       <style>
           /* Move content higher */
           .block-container {
-              position: center !important;  /* Reduce top padding */
+              align-items: center;
           }
 
           /* Button styling */
