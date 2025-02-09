@@ -63,7 +63,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
       <style>
           /* Move content higher */
           .block-container {
-              align-items: center;
+              padding: 15px;
           }
 
           /* Button styling */
