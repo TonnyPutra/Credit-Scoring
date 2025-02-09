@@ -134,7 +134,8 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
           }
       </script>
   """, unsafe_allow_html=True)
-
+    
+  st.logo("logo.png", link="https://ptatkb.idjams.com/")
   with st.sidebar:
       st.sidebar.write("Halo", st.session_state['name'])
       if st.button("🏠 Home", use_container_width=True):
@@ -154,8 +155,6 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
   
   # %% Credit Scoring Dashboard.ipynb 6
   st.title("Credit Scoring Dashboard")
-  st.logo("logo.png", link="https://ptatkb.idjams.com/")
-  
   # %% Credit Scoring Dashboard.ipynb 8
   col1, col2 = st.columns(2, gap="medium")
 
