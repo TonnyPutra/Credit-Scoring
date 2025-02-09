@@ -64,7 +64,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
           /* Move content higher */
           .block-container {
               padding: 15px;
-              max-width: 1400px !important;  /* Adjust as needed */
+              max-width: 800px !important;  /* Adjust as needed */
               margin: auto !important;       /* Centers content */
           }
 
@@ -95,7 +95,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
 
         .st-emotion-cache-cit1en {
             position: absolute;
-            bottom: -400px; /* Default value */
+            bottom: -280px; /* Default value */
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
