@@ -64,8 +64,8 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
           /* Move content higher */
           .block-container {
               padding: 15px;
-              max-width: 1400px;  /* Adjust as needed */
-              margin: auto;       /* Centers content */
+              max-width: 1400px !important;  /* Adjust as needed */
+              margin: auto !important;       /* Centers content */
           }
 
           /* Button styling */
