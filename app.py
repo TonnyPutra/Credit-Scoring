@@ -81,7 +81,7 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
           .st-emotion-cache-1wmy9hl > div {
               background-color: #185519 !important;  /* Set the column background color */
               padding: 15px;
-              # margin-left: -15px;
+              margin-left: -15px;
           }
 
 
