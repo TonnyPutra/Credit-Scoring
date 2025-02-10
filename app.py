@@ -16,6 +16,8 @@ st.markdown("""
     <style>
         .st-emotion-cache-16h9saz {
             background: #185519 !important;
+            width: 500px;
+            align-self: center;
         }
         
         .st-emotion-cache-1pst7dz {
@@ -23,7 +25,7 @@ st.markdown("""
         }
 
         .st-au {
-            background-color: #123524 !important;
+            visibility: hidden;
         }
 
         [data-testid="stHeader"] div:nth-child(2) {
