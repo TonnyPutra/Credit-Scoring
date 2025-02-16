@@ -193,8 +193,8 @@ if 'authentication_status' in st.session_state and st.session_state['authenticat
               Dengan menggunakan Deep Learning, kami membuat sebuah AI yang dapat memprediksi terkait 
               kredit skor. Model yang saat ini sudah berhasil dibangun menggunakan Neural Network
               bertipe Multi-Layer Perceptron dapat memprediksi keputusan peminjaman yang diajukan
-              seseorang berdasarkan beberapa input terkait. Model ini mencapai akurasi hingga 88% 
-              pada data latih.
+              seseorang berdasarkan beberapa input terkait. Model ini mencapai akurasi hingga 92% 
+              pada data testing.
           </div>
       """, unsafe_allow_html=True)
 
